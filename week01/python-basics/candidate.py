@@ -35,10 +35,10 @@ class Candidate:
         # - React
         # - TypeScript
         print(
-            f"候选人: {self.name}\n"
-            f"经验: {self.experience}年\n"
-            "\n"
-            "技能：\n"
-            + "\n".join(f"- {skill}" for skill in self.skills)
+                f"候选人：{self.name}\n"
+                f"经验：{self.experience} 年\n"
+                "\n"
+                "技能：\n"
+                + "\n".join(f"- {skill}" for skill in self.skills)
         )
             

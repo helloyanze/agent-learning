@@ -1,10 +1,5 @@
-skills:list[str] = ["React", "TypeScript"]
+skills = ["React", "TypeScript", "Python"]
 
-user: dict[str,object] = {
-    "name": "Alice",
-    "age": 20,
-}
-
-# %% Add two numbers
-def add(a:int,b:int) -> int:
-    return a + b
+# skills 内容转大写
+skills_upper = [skill.upper() for skill in skills]
+print(skills_upper)  # 输出: ['REACT', 'TYPESCRIPT', 'PYTHON']
