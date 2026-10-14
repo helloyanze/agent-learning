@@ -18,15 +18,21 @@ def add(a: int, b: int) -> int:
     return a + b
 
 
+def multiply(a: int, b: int) -> int:
+    return a * b
+
+
 # 3. 工具注册表
 TOOL_REGISTRY = {
     "add": add,
+    "multiply": multiply,
 }
 
 
 # 4. 参数模型注册表
 TOOL_ARGS_MODELS = {
     "add": AddArgs,
+    "multiply": AddArgs,
 }
 
 
@@ -39,5 +45,13 @@ TOOLS = [
             "description": "计算两个整数的和",
             "parameters": AddArgs.model_json_schema(),
         },
-    }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "multiply",
+            "description": "计算两个整数的乘积",
+            "parameters": AddArgs.model_json_schema(),
+        },
+    },
 ]

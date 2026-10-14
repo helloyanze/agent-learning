@@ -87,3 +87,12 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+"""
+概念	职责
+Tool Schema	告诉 LLM 有哪些工具、需要什么参数
+Tool Registry	保存实际允许调用的 Python 函数
+Tool Executor	负责查找、验证和执行工具
+Pydantic	验证模型生成的工具参数
+"""
