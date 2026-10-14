@@ -40,3 +40,12 @@ def test_extra_arguments() -> None:
             "add",
             '{"a": 18, "b": 24, "c": 100}',
         )
+
+
+# 5. 无效的 JSON 参数
+def test_invalid_json_arguments() -> None:
+    with pytest.raises(ValidationError):
+        execute_tool(
+            "add",
+            '{"a":18,"b":}',
+        )

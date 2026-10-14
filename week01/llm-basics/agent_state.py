@@ -70,3 +70,14 @@ def complete(state: AgentState) -> None:
 
     state.status = "completed"
     state.events.append("任务完成")
+
+
+def fail(state: AgentState, reson: str) -> None:
+    """标记 Agent 失败，并记录错误信息。"""
+
+    if state.status != "running":
+        return
+
+    state.status = "failed"
+    state.last_error = reson
+    state.events.append(f"任务失败：{reson}")
