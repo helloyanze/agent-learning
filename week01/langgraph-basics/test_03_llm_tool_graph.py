@@ -1,4 +1,5 @@
 import importlib.util
+from openai import OpenAIError
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock
@@ -256,4 +257,33 @@ def test_graph_max_llm_calls(monkeypatch, agent_module):
     assert result["llm_calls"] == 1
     assert result["tool_calls"] == 1
     assert result["final_answer"] == "达到最大 LLM 调用次数"
+    assert create_mock.call_count == 1
+
+
+def test_graph_api_failure(monkeypatch, agent_module):
+
+    # 模拟 API 报错，不发送真实请求
+    create_mock = Mock(side_effect=OpenAIError("模拟 API 调用失败"))
+
+    monkeypatch.setattr(
+        agent_module.client.chat.completions,
+        "create",
+        create_mock,
+    )
+
+    initial_state = {
+        "messages": [{"role": "user", "content": "计算18+24"}],
+        "llm_calls": 0,
+        "tool_calls": 0,
+        "status": "running",
+        "final_answer": None,
+    }
+
+    result = agent_module.graph.invoke(initial_state)
+
+    assert result["status"] == "failed"
+    assert result["llm_calls"] == 1
+    assert result["tool_calls"] == 0
+
+    assert "LLM API 调用失败" in result["final_answer"]
     assert create_mock.call_count == 1

@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Annotated, Any, Literal, TypedDict
 
 from dotenv import load_dotenv
-from openai import OpenAI
+from openai import OpenAI, OpenAIError
 from pydantic import BaseModel, ConfigDict, ValidationError
 from langgraph.graph import StateGraph, START, END
 
@@ -104,12 +104,20 @@ def llm_node(state: AgentState) -> dict:
     round_num = state["llm_calls"] + 1
     print(f"\n===== LLM 第 {round_num} 轮 =====")
 
-    response = client.chat.completions.create(
-        model="deepseek-v4-pro",
-        messages=state["messages"],
-        tools=TOOLS,
-        tool_choice="auto",
-    )
+    try:
+        response = client.chat.completions.create(
+            model="deepseek-v4-pro",
+            messages=state["messages"],
+            tools=TOOLS,
+            tool_choice="auto",
+        )
+
+    except OpenAIError as e:
+        return {
+            "llm_calls": round_num,
+            "status": "failed",
+            "final_answer": (f"LLM API 调用失败：{type(e).__name__}"),
+        }
 
     choice = response.choices[0]
     message = choice.message
