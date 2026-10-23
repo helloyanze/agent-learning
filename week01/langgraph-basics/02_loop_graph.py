@@ -44,7 +44,15 @@ builder = StateGraph(LoopState)
 
 builder.add_node("accumulate", accumulate_node)
 
-builder.add_edge(START, "accumulate")
+# 进入 Graph 时先检查是否需要累加
+builder.add_conditional_edges(
+    START,
+    route_after_accumulate,
+    {
+        "continue": "accumulate",
+        "finish": END,
+    },
+)
 
 builder.add_conditional_edges(
     "accumulate",
@@ -61,7 +69,7 @@ graph = builder.compile()
 # 5. 执行
 def main() -> None:
     initial_state: LoopState = {
-        "n": 5,
+        "n": 0,
         "current": 1,
         "total": 0,
         "steps": [],
